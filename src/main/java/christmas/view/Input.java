@@ -10,4 +10,9 @@ public class Input {
         System.out.println(Message.READ_DATE_MESSAGE.getMessage());
         return sc.nextLine();
     }
+
+    public String readOrder() {
+        System.out.println(Message.READ_ORDER_MESSAGE.getMessage());
+        return sc.nextLine();
+    }
 }
