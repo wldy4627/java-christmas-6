@@ -38,5 +38,7 @@ public class ChristmasController {
         } catch (IllegalArgumentException e) {
             output.printErrorMessage(e.getMessage());
         }
+
+        Map<String, Integer> orderCategoryMap = christmasService.calculateOrderCategory(orderMap);
     }
 }

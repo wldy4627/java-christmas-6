@@ -81,4 +81,20 @@ public class ChristmasService {
         }
 
     }
+
+    public Map<String, Integer> calculateOrderCategory(Map<String, Integer> orderMap) {
+        Map<String, Integer> categoryMap = new HashMap<>();
+
+        categoryMap.put("에피타이저", 0);
+        categoryMap.put("메인", 0);
+        categoryMap.put("디저트", 0);
+        categoryMap.put("음료", 0);
+
+        for (Map.Entry<String, Integer> entry : orderMap.entrySet()) {
+            String categoryName = menu.getCategory(entry.getKey());
+            categoryMap.put(categoryName, categoryMap.getOrDefault(categoryName, 0) + entry.getValue());
+        }
+
+        return categoryMap;
+    }
 }

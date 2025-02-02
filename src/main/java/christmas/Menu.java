@@ -55,4 +55,17 @@ public class Menu {
         }
         return false;
     }
+
+    public String getCategory(String orderName) {
+        String category = null;
+
+        for (Map.Entry<String, Map<String, Integer>> entry : menu.entrySet()) {
+            if (entry.getValue().containsKey(orderName)) {
+                category = entry.getKey();
+                break;
+            }
+        }
+
+        return category;
+    }
 }
