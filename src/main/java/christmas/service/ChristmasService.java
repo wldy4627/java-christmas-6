@@ -2,13 +2,18 @@ package christmas.service;
 
 import christmas.Menu;
 
+import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ChristmasService {
 
     private final ChristmasValidator validator = new ChristmasValidator();
     Menu menu = Menu.getInstance();
+
+    private final Map<String, Integer> discountAmountMap = new HashMap<>();
 
     public int validateDate(String date) {
         // 1. 1 ~ 31의 숫자인지 확인
@@ -96,5 +101,115 @@ public class ChristmasService {
         }
 
         return categoryMap;
+    }
+
+    public int calculateTotalPrice(Map<String, Integer> orderMap) {
+        int totalPrice = 0;
+
+        for (Map.Entry<String, Integer> entry : orderMap.entrySet()) {
+            String menuName = entry.getKey();
+            int quantity = entry.getValue();
+            int price = menu.getMenuPrice(menuName);
+
+            totalPrice += price * quantity;
+        }
+
+        return totalPrice;
+    }
+
+    public int calculateGiftCnt(int totalPrice) {
+        return totalPrice / 120000;
+    }
+
+    private void initializeDiscountAmountMap() {
+        discountAmountMap.put("디데이", 0);
+        discountAmountMap.put("메인", 0);
+        discountAmountMap.put("디저트", 0);
+        discountAmountMap.put("특별", 0);
+    }
+
+    public Map<String, Integer> calculateDiscountAmount(int date, Map<String, Integer> orderMap, Map<String, Integer> orderCategoryMap) {
+        initializeDiscountAmountMap();
+
+        // 크리스마스 디데이 할인
+        if (date <= 25) {
+            discountAmountMap.put("디데이", 1000 + 100 * (date - 1));
+        }
+
+        // 주말 할인
+        if (date % 7 == 1 || date % 7 == 2) {
+            discountAmountMap.put("주말", 2023 * orderCategoryMap.getOrDefault("메인", 0));
+        } else {  // 평일 할인
+            discountAmountMap.put("평일", 2023 * orderCategoryMap.getOrDefault("디저트", 0));
+        }
+
+        // 특별 할인
+        if (date % 7 == 3 || date == 25) {
+            discountAmountMap.put("특별", discountAmountMap.getOrDefault("총 금액", 0) + 1000);
+        }
+
+        return discountAmountMap;
+    }
+
+    public List<String> generateBenefitMap(Map<String, Integer> discountAmountMap, int giftCnt) {
+        List<String> benefits = new ArrayList<>();
+        String formattedBenefit;
+
+        if (discountAmountMap.getOrDefault("디데이", 0) > 0) {
+            formattedBenefit = NumberFormat.getInstance().format(discountAmountMap.get("디데이")) + "원";
+            benefits.add("크리스마스 디데이 할인: -" + formattedBenefit);
+        }
+        if (discountAmountMap.getOrDefault("평일", 0) > 0) {
+            formattedBenefit = NumberFormat.getInstance().format(discountAmountMap.get("평일")) + "원";
+            benefits.add("평일 할인: -" + formattedBenefit);
+        }
+        if (discountAmountMap.getOrDefault("주말", 0) > 0) {
+            formattedBenefit = NumberFormat.getInstance().format(discountAmountMap.get("주말")) + "원";
+            benefits.add("주말 할인: -" + formattedBenefit);
+        }
+        if (discountAmountMap.getOrDefault("특별", 0) > 0) {
+            formattedBenefit = NumberFormat.getInstance().format(discountAmountMap.get("특별")) + "원";
+            benefits.add("특별 할인: -" + formattedBenefit);
+        }
+        if (giftCnt > 0) {
+            formattedBenefit = NumberFormat.getInstance().format(25000 * giftCnt) + "원";
+            benefits.add("증정 이벤트: -" + formattedBenefit);
+        }
+
+        return benefits;
+    }
+
+    public int calculateTotalBenefitsAmount(Map<String, Integer> discountAmountMap, int giftCnt) {
+        int totalBenefit = 0;
+
+        for (Map.Entry<String, Integer> entry : discountAmountMap.entrySet()) {
+            totalBenefit += entry.getValue();
+        }
+
+        totalBenefit += 25000 * giftCnt;
+
+        return totalBenefit;
+    }
+
+    public int calculateTotalPayment(int totalPrice, Map<String, Integer> discountAmountMap) {
+        int totalPayment = totalPrice;
+
+        for (Map.Entry<String, Integer> entry : discountAmountMap.entrySet()) {
+            totalPayment -= entry.getValue();
+        }
+
+        return totalPayment;
+    }
+
+    public String calculateEventBadge(int totalBenefitAmount) {
+        if (totalBenefitAmount >= 20000) {
+            return "산타";
+        } else if (totalBenefitAmount >= 10000) {
+            return "트리";
+        } else if (totalBenefitAmount >= 5000) {
+            return "별";
+        } else {
+            return "없음";
+        }
     }
 }

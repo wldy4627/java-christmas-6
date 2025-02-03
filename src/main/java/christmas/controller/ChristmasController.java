@@ -40,5 +40,26 @@ public class ChristmasController {
         }
 
         Map<String, Integer> orderCategoryMap = christmasService.calculateOrderCategory(orderMap);
+
+        // 혜택 계산 및 출력
+        output.printEventsMessage(date);
+        // 1. 주문 메뉴 출력
+        output.printOrderMenu(orderMap);
+        // 2. 할인 전 총 주문 금액 출력
+        int totalPrice = christmasService.calculateTotalPrice(orderMap);
+        output.printTotalPrice(totalPrice);
+        // 3. 증정 메뉴 출력
+        int giftCnt = christmasService.calculateGiftCnt(totalPrice);
+        output.printGift(giftCnt);
+        // 4. 혜택 내역 출력
+        Map<String, Integer> discountAmountMap = christmasService.calculateDiscountAmount(date, orderMap, orderCategoryMap);
+        output.printBenefit(christmasService.generateBenefitMap(discountAmountMap, giftCnt));
+        // 5. 총 혜택 금액 출력
+        int totalBenefitAmount = christmasService.calculateTotalBenefitsAmount(discountAmountMap, giftCnt);
+        output.printBenefitAmount(totalBenefitAmount);
+        // 6. 할인 후 예상 결제 금액 출력
+        output.printTotalPayment(christmasService.calculateTotalPayment(totalPrice, discountAmountMap));
+        // 7. 이벤트 뱃지 출력
+        output.printEventBadge(christmasService.calculateEventBadge(totalBenefitAmount));
     }
 }

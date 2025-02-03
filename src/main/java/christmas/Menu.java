@@ -68,4 +68,16 @@ public class Menu {
 
         return category;
     }
+
+    public int getMenuPrice(String menuName) {
+        int price = 0;
+
+        for (Map<String, Integer> category : menu.values()) {
+            if (category.containsKey(menuName)) {
+                price = category.get(menuName);
+                break;
+            }
+        }
+        return price;
+    }
 }
