@@ -123,8 +123,8 @@ public class ChristmasService {
 
     private void initializeDiscountAmountMap() {
         discountAmountMap.put("디데이", 0);
-        discountAmountMap.put("메인", 0);
-        discountAmountMap.put("디저트", 0);
+        discountAmountMap.put("주말", 0);
+        discountAmountMap.put("평일", 0);
         discountAmountMap.put("특별", 0);
     }
 
