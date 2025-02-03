@@ -128,7 +128,7 @@ public class ChristmasService {
         discountAmountMap.put("특별", 0);
     }
 
-    public Map<String, Integer> calculateDiscountAmount(int date, Map<String, Integer> orderMap, Map<String, Integer> orderCategoryMap) {
+    public Map<String, Integer> calculateDiscountAmount(int date, Map<String, Integer> orderCategoryMap) {
         initializeDiscountAmountMap();
 
         // 크리스마스 디데이 할인

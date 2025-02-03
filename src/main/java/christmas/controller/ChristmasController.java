@@ -52,7 +52,7 @@ public class ChristmasController {
         int giftCnt = christmasService.calculateGiftCnt(totalPrice);
         output.printGift(giftCnt);
         // 4. 혜택 내역 출력
-        Map<String, Integer> discountAmountMap = christmasService.calculateDiscountAmount(date, orderMap, orderCategoryMap);
+        Map<String, Integer> discountAmountMap = christmasService.calculateDiscountAmount(date, orderCategoryMap);
         output.printBenefit(christmasService.generateBenefitMap(discountAmountMap, giftCnt));
         // 5. 총 혜택 금액 출력
         int totalBenefitAmount = christmasService.calculateTotalBenefitsAmount(discountAmountMap, giftCnt);
